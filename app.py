@@ -1,4 +1,5 @@
 from flask import Flask
+import models
 
 import os
 from dotenv import load_dotenv
@@ -19,4 +20,5 @@ def hello():
 
 
 if __name__ == '__main__':
+    models.initialize()
     app.run(debug=DEBUG, port=PORT)
