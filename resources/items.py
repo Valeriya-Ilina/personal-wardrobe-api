@@ -38,3 +38,49 @@ def create_item():
         message='Successfully created item!',
         status=201
     ), 201
+
+# "SHOW" route
+@items.route('/<id>', methods=["GET"])
+def get_one_item(id):
+    item = models.Item.get_by_id(id)
+    item_dict = model_to_dict(item)
+    for key, value in item_dict.items():
+        if key == 'price':
+            item_dict[key] = str(value)
+
+    return jsonify(
+        data = item_dict,
+        message = 'Item is found',
+        status = 200
+    ), 200
+
+# "PUT" route to update an item
+@items.route('/<id>', methods=["PUT"])
+def update_item(id):
+    payload = request.get_json()
+    # update data in DB
+    models.Item.update(**payload).where(models.Item.id==id).execute()
+
+    # GET updated data from DB
+    item = models.Item.get_by_id(id)
+    item_dict = model_to_dict(item)
+    for key, value in item_dict.items():
+        if key == 'price':
+            item_dict[key] = str(value)
+
+    return jsonify(
+        data = item_dict,
+        status = 200,
+        message = 'Resource updated seccessfully'
+    ), 200
+
+# "DELETE" route
+@items.route('/<id>', methods=["DELETE"])
+def delete_item(id):
+    models.Item.delete().where(models.Item.id==id).execute()
+
+    return jsonify(
+        data = None,
+        status = 200,
+        message = 'resource deleted seccessfully'
+    ), 200
