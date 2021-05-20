@@ -1,6 +1,6 @@
 from flask import Flask
 import models
-
+from resources.items import items
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -11,6 +11,8 @@ PORT=8000
 app = Flask(__name__)
 
 app.secret_key = os.environ.get("FLASK_APP_SECRET")
+app.register_blueprint(items, url_prefix='/api/v1/items')
+
 
 @app.route('/')
 def hello():
