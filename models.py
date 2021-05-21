@@ -2,9 +2,10 @@ from peewee import *
 import datetime
 
 DATABASE = SqliteDatabase('wardrobe.sqlite')
+# DATABASE = PostgresqlDatabase('wardrobe', user='postgres')
 
 
-class User(Model):
+class User_Account(Model):
     username=CharField(unique=True)
     email=CharField(unique=True)
     password=CharField()
@@ -16,7 +17,7 @@ class User(Model):
 class Item(Model):
     name=CharField()
     price=DecimalField(decimal_places=2)
-    user_id=ForeignKeyField(User, backref='user_items')
+    user_id=ForeignKeyField(User_Account, backref='user_items')
     url=CharField()
     is_purchased=BooleanField(default=False)
     created_at: DateTimeField(default=datetime.datetime.now)
@@ -44,6 +45,6 @@ class Outfit(Model):
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Item, Category, Outfit], safe=True)
+    DATABASE.create_tables([User_Account, Item, Category, Outfit], safe=True)
     print("Connected to the DB and created tables if not exist")
     DATABASE.close()
