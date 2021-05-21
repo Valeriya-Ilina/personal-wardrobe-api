@@ -1,0 +1,58 @@
+import models
+from flask import Blueprint, request, jsonify
+from playhouse.shortcuts import model_to_dict
+
+categories = Blueprint('categories', 'categories')
+
+# "GET" route
+@categories.route('/', methods=['GET'])
+def categories_index():
+    result = models.Category.select()
+    category_list_of_dicts = [model_to_dict(category) for category in result]
+
+    for category_dict in category_list_of_dicts:
+        for key, value in category_dict['item_id'].items():
+            if key == 'price':
+                category_dict['item_id'][key] = str(value)
+
+    return jsonify({
+        'data': category_list_of_dicts,
+        'message': f"Successfully found {len(category_list_of_dicts)} categories",
+        'status': 200
+    }), 200
+
+
+# "POST" route to create a category
+@categories.route('/', methods=['POST'])
+def create_category():
+    payload = request.get_json()
+    new_category = models.Category.create(name=payload['name'],item_id=payload['item_id'])
+    print(new_category)
+
+    category_dict = model_to_dict(new_category)
+
+    for key, value in category_dict['item_id'].items():
+        if key == 'price':
+            category_dict['item_id'][key] = str(value)
+
+    return jsonify(
+        data=category_dict,
+        message='Successfully created category!',
+        status=201
+    ), 201
+
+
+# "SHOW" route
+@categories.route('/<id>', methods=["GET"])
+def get_one_category(id):
+    category = models.Category.get_by_id(id)
+    category_dict = model_to_dict(category)
+    for key, value in category_dict['item_id'].items():
+        if key == 'price':
+            category_dict['item_id'][key] = str(value)
+
+    return jsonify(
+        data = category_dict,
+        message = 'Category is found',
+        status = 200
+    ), 200
