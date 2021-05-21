@@ -56,3 +56,35 @@ def get_one_category(id):
         message = 'Category is found',
         status = 200
     ), 200
+
+
+# "PUT" route to update a category
+@categories.route('/<id>', methods=["PUT"])
+def update_category(id):
+    payload = request.get_json()
+    # update data in DB
+    models.Category.update(**payload).where(models.Category.id==id).execute()
+
+    # GET updated data from DB
+    category = models.Category.get_by_id(id)
+    category_dict = model_to_dict(category)
+    for key, value in category_dict['item_id'].items():
+        if key == 'price':
+            category_dict['item_id'][key] = str(value)
+
+    return jsonify(
+        data = category_dict,
+        status = 200,
+        message = 'Resource updated seccessfully'
+    ), 200
+
+# "DELETE" route
+@categories.route('/<id>', methods=["DELETE"])
+def delete_category(id):
+    models.Category.delete().where(models.Category.id==id).execute()
+
+    return jsonify(
+        data = None,
+        status = 200,
+        message = 'resource deleted seccessfully'
+    ), 200
