@@ -82,5 +82,5 @@ def delete_item(id):
     return jsonify(
         data = None,
         status = 200,
-        message = 'resource deleted seccessfully'
+        message = 'Resource deleted seccessfully'
     ), 200
