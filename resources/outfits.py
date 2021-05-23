@@ -10,19 +10,19 @@ outfits = Blueprint('outfits', 'outfits')
 @login_required
 def outfits_index():
     #return "get route is working"
-    result = models.Outfit.select().join(models.Item).where(models.Item.user_id == current_user.id)
-    outfit_list_of_dicts = [model_to_dict(outfit) for outfit in result]
+    outfit_list_of_dicts = [model_to_dict(outfit) for outfit in current_user.user_outfits]
+    print(outfit_list_of_dicts)
 
     # convert price Decimal type to string before serializing to JSON
     # to avoid TypeError: Object of type Decimal is not JSON serializable
-    for dict_outfit in outfit_list_of_dicts:
-        for key, value in dict_outfit['item_id'].items():
-            if key == 'price':
-                dict_outfit['item_id'][key] = str(value)
+    # for dict_outfit in outfit_list_of_dicts:
+    #     for key, value in dict_outfit['item_id'].items():
+    #         if key == 'price':
+    #             dict_outfit['item_id'][key] = str(value)
 
     # remove user data
-    for dict_outfit in outfit_list_of_dicts:
-        dict_outfit['item_id'].pop('user_id')
+    for outfit_dict in outfit_list_of_dicts:
+        outfit_dict.pop('user_id')
 
     return jsonify({
         'data': outfit_list_of_dicts,
@@ -36,17 +36,17 @@ def outfits_index():
 @login_required
 def create_outfit():
     payload = request.get_json()
-    new_outfit = models.Outfit.create(name=payload['name'],date=payload['date'],item_id=payload['item_id'])
+    new_outfit = models.Outfit.create(name=payload['name'],user_id=current_user.id,date=payload['date'])
     print(new_outfit)
 
     outfit_dict = model_to_dict(new_outfit)
 
-    for key, value in outfit_dict['item_id'].items():
-        if key == 'price':
-            outfit_dict['item_id'][key] = str(value)
-
-    # remove user data
-    dict_outfit['item_id'].pop('user_id')
+    # for key, value in outfit_dict['item_id'].items():
+    #     if key == 'price':
+    #         outfit_dict['item_id'][key] = str(value)
+    #
+    # # remove user data
+    # dict_outfit['item_id'].pop('user_id')
 
     return jsonify(
         data=outfit_dict,
@@ -61,12 +61,12 @@ def create_outfit():
 def get_one_outfit(id):
     outfit = models.Outfit.get_by_id(id)
     outfit_dict = model_to_dict(outfit)
-    for key, value in outfit_dict['item_id'].items():
-        if key == 'price':
-            outfit_dict['item_id'][key] = str(value)
+    # for key, value in outfit_dict['item_id'].items():
+    #     if key == 'price':
+    #         outfit_dict['item_id'][key] = str(value)
 
     # remove user data
-    dict_outfit['item_id'].pop('user_id')
+    outfit_dict.pop('user_id')
 
     return jsonify(
         data = outfit_dict,
@@ -86,13 +86,13 @@ def update_outfit(id):
     # GET updated data from DB
     outfit = models.Outfit.get_by_id(id)
     outfit_dict = model_to_dict(outfit)
-    for key, value in outfit_dict['item_id'].items():
-        if key == 'price':
-            outfit_dict['item_id'][key] = str(value)
+    # for key, value in outfit_dict['item_id'].items():
+    #     if key == 'price':
+    #         outfit_dict['item_id'][key] = str(value)
 
     # remove user data
-    dict_outfit['item_id'].pop('user_id')
-    
+    outfit_dict.pop('user_id')
+
     return jsonify(
         data = outfit_dict,
         status = 200,

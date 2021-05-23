@@ -38,7 +38,7 @@ class Category(Model):
 class Outfit(Model):
     name=CharField()
     date=DateField()
-    item_id=ForeignKeyField(Item, backref='item_outfits')
+    user_id=ForeignKeyField(User_Account, backref='user_outfits')
 
     class Meta:
         database = DATABASE
