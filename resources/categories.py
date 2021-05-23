@@ -10,8 +10,6 @@ categories = Blueprint('categories', 'categories')
 @login_required
 def categories_index():
     result = models.Category.select().join(models.Item).where(models.Item.user_id == current_user.id)
-    print(result)
-    print(current_user.user_items)
     category_list_of_dicts = [model_to_dict(category) for category in result]
 
     for category_dict in category_list_of_dicts:
