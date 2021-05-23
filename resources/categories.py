@@ -1,11 +1,13 @@
 import models
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
+from flask_login import current_user, login_required
 
 categories = Blueprint('categories', 'categories')
 
 # "GET" route
 @categories.route('/', methods=['GET'])
+@login_required
 def categories_index():
     result = models.Category.select()
     category_list_of_dicts = [model_to_dict(category) for category in result]
@@ -24,6 +26,7 @@ def categories_index():
 
 # "POST" route to create a category
 @categories.route('/', methods=['POST'])
+@login_required
 def create_category():
     payload = request.get_json()
     new_category = models.Category.create(name=payload['name'],item_id=payload['item_id'])
@@ -44,6 +47,7 @@ def create_category():
 
 # "SHOW" route
 @categories.route('/<id>', methods=["GET"])
+@login_required
 def get_one_category(id):
     category = models.Category.get_by_id(id)
     category_dict = model_to_dict(category)
@@ -60,6 +64,7 @@ def get_one_category(id):
 
 # "PUT" route to update a category
 @categories.route('/<id>', methods=["PUT"])
+@login_required
 def update_category(id):
     payload = request.get_json()
     # update data in DB
@@ -80,6 +85,7 @@ def update_category(id):
 
 # "DELETE" route
 @categories.route('/<id>', methods=["DELETE"])
+@login_required
 def delete_category(id):
     models.Category.delete().where(models.Category.id==id).execute()
 

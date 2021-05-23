@@ -1,11 +1,13 @@
 import models
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
+from flask_login import current_user, login_required
 
 outfits = Blueprint('outfits', 'outfits')
 
 # "GET" route
 @outfits.route('/', methods=['GET'])
+@login_required
 def outfits_index():
     #return "get route is working"
     result = models.Outfit.select()
@@ -27,6 +29,7 @@ def outfits_index():
 
 # "POST" route to create an outfit
 @outfits.route('/', methods=['POST'])
+@login_required
 def create_outfit():
     payload = request.get_json()
     new_outfit = models.Outfit.create(name=payload['name'],date=payload['date'],item_id=payload['item_id'])
@@ -47,6 +50,7 @@ def create_outfit():
 
 # "SHOW" route
 @outfits.route('/<id>', methods=["GET"])
+@login_required
 def get_one_outfit(id):
     outfit = models.Outfit.get_by_id(id)
     outfit_dict = model_to_dict(outfit)
@@ -63,6 +67,7 @@ def get_one_outfit(id):
 
 # "PUT" route to update an outfit
 @outfits.route('/<id>', methods=["PUT"])
+@login_required
 def update_outfit(id):
     payload = request.get_json()
     # update data in DB
@@ -84,6 +89,7 @@ def update_outfit(id):
 
 # "DELETE" route
 @outfits.route('/<id>', methods=["DELETE"])
+@login_required
 def delete_outfit(id):
     models.Outfit.delete().where(models.Outfit.id==id).execute()
 

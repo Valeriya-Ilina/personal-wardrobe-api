@@ -42,6 +42,7 @@ def create_item():
 
 # "SHOW" route
 @items.route('/<id>', methods=["GET"])
+@login_required
 def get_one_item(id):
     item = models.Item.get_by_id(id)
     item_dict = model_to_dict(item)
@@ -57,6 +58,7 @@ def get_one_item(id):
 
 # "PUT" route to update an item
 @items.route('/<id>', methods=["PUT"])
+@login_required
 def update_item(id):
     payload = request.get_json()
     # update data in DB
@@ -77,6 +79,7 @@ def update_item(id):
 
 # "DELETE" route
 @items.route('/<id>', methods=["DELETE"])
+@login_required
 def delete_item(id):
     models.Item.delete().where(models.Item.id==id).execute()
 
