@@ -9,13 +9,19 @@ categories = Blueprint('categories', 'categories')
 @categories.route('/', methods=['GET'])
 @login_required
 def categories_index():
-    result = models.Category.select()
+    result = models.Category.select().join(models.Item).where(models.Item.user_id == current_user.id)
+    print(result)
+    print(current_user.user_items)
     category_list_of_dicts = [model_to_dict(category) for category in result]
 
     for category_dict in category_list_of_dicts:
         for key, value in category_dict['item_id'].items():
             if key == 'price':
                 category_dict['item_id'][key] = str(value)
+
+    # remove user data
+    for category_dict in category_list_of_dicts:
+        category_dict['item_id'].pop('user_id')
 
     return jsonify({
         'data': category_list_of_dicts,
@@ -38,6 +44,9 @@ def create_category():
         if key == 'price':
             category_dict['item_id'][key] = str(value)
 
+    # remove user data
+    category_dict['item_id'].pop('user_id')
+
     return jsonify(
         data=category_dict,
         message='Successfully created category!',
@@ -54,6 +63,9 @@ def get_one_category(id):
     for key, value in category_dict['item_id'].items():
         if key == 'price':
             category_dict['item_id'][key] = str(value)
+
+    # remove user data
+    category_dict['item_id'].pop('user_id')
 
     return jsonify(
         data = category_dict,
@@ -76,6 +88,9 @@ def update_category(id):
     for key, value in category_dict['item_id'].items():
         if key == 'price':
             category_dict['item_id'][key] = str(value)
+
+    # remove user data
+    category_dict['item_id'].pop('user_id')
 
     return jsonify(
         data = category_dict,
