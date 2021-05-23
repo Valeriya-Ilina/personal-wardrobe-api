@@ -1,15 +1,15 @@
 import models
 from flask import Blueprint, request, jsonify
 from playhouse.shortcuts import model_to_dict
+from flask_login import current_user, login_required
 
 items = Blueprint('items', 'items')
 
 # "GET" route
 @items.route('/', methods=['GET'])
+@login_required
 def items_index():
-    #return "get route is working"
-    result = models.Item.select()
-    item_list_of_dicts = [model_to_dict(item) for item in result]
+    item_list_of_dicts = [model_to_dict(item) for item in current_user.user_items]
 
     # convert price Decimal type to string before serializing to JSON
     # to avoid TypeError: Object of type Decimal is not JSON serializable
@@ -26,9 +26,10 @@ def items_index():
 
 # "POST" route to create an item
 @items.route('/', methods=['POST'])
+@login_required
 def create_item():
     payload = request.get_json()
-    new_item = models.Item.create(name=payload['name'],price=payload['price'],user_id=payload['user_id'],url=payload['url'])
+    new_item = models.Item.create(name=payload['name'],price=payload['price'],user_id=current_user.id,url=payload['url'])
     print(new_item)
 
     item_dict = model_to_dict(new_item)
