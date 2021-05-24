@@ -44,8 +44,19 @@ class Outfit(Model):
         database = DATABASE
 
 
+class Outfit_Collection(Model):
+    item_id=ForeignKeyField(Item, backref='item_outfits')
+    outfit_id=ForeignKeyField(Outfit, backref='outfit_items')
+    coordinateX=IntegerField()
+    coordinateY=IntegerField()
+    image_width=IntegerField()
+    image_height=IntegerField()
+
+    class Meta:
+        database = DATABASE
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User_Account, Item, Category, Outfit], safe=True)
+    DATABASE.create_tables([User_Account, Item, Category, Outfit, Outfit_Collection], safe=True)
     print("Connected to the DB and created tables if not exist")
     DATABASE.close()
