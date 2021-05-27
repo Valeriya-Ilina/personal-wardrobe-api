@@ -18,6 +18,10 @@ def items_index():
             if key == 'price':
                 dict_item[key] = str(value)
 
+    # remove user data
+    for dict_item in item_list_of_dicts:
+        dict_item.pop('user_id')
+
     return jsonify({
         'data': item_list_of_dicts,
         'message': f"Successfully found {len(item_list_of_dicts)} items",
@@ -29,10 +33,13 @@ def items_index():
 @login_required
 def create_item():
     payload = request.get_json()
-    new_item = models.Item.create(name=payload['name'],price=payload['price'],user_id=current_user.id,url=payload['url'])
+    new_item = models.Item.create(name=payload['name'], price=payload['price'], user_id=current_user.id, url=payload['url'],category_id=payload['category_id'])
     print(new_item)
 
     item_dict = model_to_dict(new_item)
+
+    # remove user data
+    item_dict.pop('user_id')
 
     return jsonify(
         data=item_dict,
@@ -49,6 +56,9 @@ def get_one_item(id):
     for key, value in item_dict.items():
         if key == 'price':
             item_dict[key] = str(value)
+
+    # remove user data
+    item_dict.pop('user_id')
 
     return jsonify(
         data = item_dict,
@@ -70,6 +80,9 @@ def update_item(id):
     for key, value in item_dict.items():
         if key == 'price':
             item_dict[key] = str(value)
+
+    # remove user data
+    item_dict.pop('user_id')
 
     return jsonify(
         data = item_dict,

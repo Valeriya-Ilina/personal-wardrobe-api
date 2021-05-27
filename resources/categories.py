@@ -9,17 +9,8 @@ categories = Blueprint('categories', 'categories')
 @categories.route('/', methods=['GET'])
 @login_required
 def categories_index():
-    result = models.Category.select().join(models.Item).where(models.Item.user_id == current_user.id)
+    result = models.Category.select()
     category_list_of_dicts = [model_to_dict(category) for category in result]
-
-    for category_dict in category_list_of_dicts:
-        for key, value in category_dict['item_id'].items():
-            if key == 'price':
-                category_dict['item_id'][key] = str(value)
-
-    # remove user data
-    for category_dict in category_list_of_dicts:
-        category_dict['item_id'].pop('user_id')
 
     return jsonify({
         'data': category_list_of_dicts,
@@ -33,17 +24,10 @@ def categories_index():
 @login_required
 def create_category():
     payload = request.get_json()
-    new_category = models.Category.create(name=payload['name'],item_id=payload['item_id'])
+    new_category = models.Category.create(name=payload['name'])
     print(new_category)
 
     category_dict = model_to_dict(new_category)
-
-    for key, value in category_dict['item_id'].items():
-        if key == 'price':
-            category_dict['item_id'][key] = str(value)
-
-    # remove user data
-    category_dict['item_id'].pop('user_id')
 
     return jsonify(
         data=category_dict,
@@ -58,12 +42,6 @@ def create_category():
 def get_one_category(id):
     category = models.Category.get_by_id(id)
     category_dict = model_to_dict(category)
-    for key, value in category_dict['item_id'].items():
-        if key == 'price':
-            category_dict['item_id'][key] = str(value)
-
-    # remove user data
-    category_dict['item_id'].pop('user_id')
 
     return jsonify(
         data = category_dict,
@@ -83,12 +61,6 @@ def update_category(id):
     # GET updated data from DB
     category = models.Category.get_by_id(id)
     category_dict = model_to_dict(category)
-    for key, value in category_dict['item_id'].items():
-        if key == 'price':
-            category_dict['item_id'][key] = str(value)
-
-    # remove user data
-    category_dict['item_id'].pop('user_id')
 
     return jsonify(
         data = category_dict,
