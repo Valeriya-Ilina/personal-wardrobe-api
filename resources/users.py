@@ -20,7 +20,7 @@ def get_users():
 
 #-------------------- REGISTER USER ---------------------------
 
-@users.route('/', methods=['POST'])
+@users.route('/register', methods=['POST'])
 def register():
     payload = request.get_json()
     payload['email'] = payload['email'].lower()
