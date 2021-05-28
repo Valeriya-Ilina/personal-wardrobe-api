@@ -27,7 +27,9 @@ class Item(Model):
     price=DecimalField(decimal_places=2)
     user_id=ForeignKeyField(User_Account, backref='user_items')
     category_id=ForeignKeyField(Category, backref='category_items')
-    url=CharField()
+    imageUrl=CharField()
+    itemInStoreUrl=CharField()
+    brand=CharField()
     is_purchased=BooleanField(default=False)
     created_at: DateTimeField(default=datetime.datetime.now)
 
