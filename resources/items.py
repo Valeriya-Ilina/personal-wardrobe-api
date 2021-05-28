@@ -33,7 +33,7 @@ def items_index():
 @login_required
 def create_item():
     payload = request.get_json()
-    new_item = models.Item.create(name=payload['name'], price=payload['price'], user_id=current_user.id, url=payload['url'],category_id=payload['category_id'])
+    new_item = models.Item.create(name=payload['name'], price=payload['price'], is_purchased=payload['is_purchased'], user_id=current_user.id, url=payload['url'],category_id=payload['category_id'])
     print(new_item)
 
     item_dict = model_to_dict(new_item)
