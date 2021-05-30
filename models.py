@@ -31,7 +31,7 @@ class Item(Model):
     itemInStoreUrl=CharField()
     brand=CharField()
     is_purchased=BooleanField(default=False)
-    created_at: DateTimeField(default=datetime.datetime.now)
+    created_at=DateTimeField(default=datetime.datetime.now)
 
     class Meta:
         database = DATABASE
