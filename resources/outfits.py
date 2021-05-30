@@ -13,13 +13,6 @@ def outfits_index():
     outfit_list_of_dicts = [model_to_dict(outfit) for outfit in current_user.user_outfits]
     print(outfit_list_of_dicts)
 
-    # convert price Decimal type to string before serializing to JSON
-    # to avoid TypeError: Object of type Decimal is not JSON serializable
-    # for dict_outfit in outfit_list_of_dicts:
-    #     for key, value in dict_outfit['item_id'].items():
-    #         if key == 'price':
-    #             dict_outfit['item_id'][key] = str(value)
-
     # remove user data
     for outfit_dict in outfit_list_of_dicts:
         outfit_dict.pop('user_id')
@@ -41,12 +34,8 @@ def create_outfit():
 
     outfit_dict = model_to_dict(new_outfit)
 
-    # for key, value in outfit_dict['item_id'].items():
-    #     if key == 'price':
-    #         outfit_dict['item_id'][key] = str(value)
-    #
-    # # remove user data
-    # dict_outfit['item_id'].pop('user_id')
+    # remove user data
+    outfit_dict.pop('user_id')
 
     return jsonify(
         data=outfit_dict,
@@ -61,9 +50,6 @@ def create_outfit():
 def get_one_outfit(id):
     outfit = models.Outfit.get_by_id(id)
     outfit_dict = model_to_dict(outfit)
-    # for key, value in outfit_dict['item_id'].items():
-    #     if key == 'price':
-    #         outfit_dict['item_id'][key] = str(value)
 
     # remove user data
     outfit_dict.pop('user_id')
@@ -86,9 +72,6 @@ def update_outfit(id):
     # GET updated data from DB
     outfit = models.Outfit.get_by_id(id)
     outfit_dict = model_to_dict(outfit)
-    # for key, value in outfit_dict['item_id'].items():
-    #     if key == 'price':
-    #         outfit_dict['item_id'][key] = str(value)
 
     # remove user data
     outfit_dict.pop('user_id')
