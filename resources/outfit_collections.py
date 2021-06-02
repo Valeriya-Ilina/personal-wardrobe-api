@@ -41,17 +41,17 @@ def create_outfit_collections():
     new_outfit_collection = models.Outfit_Collection.create(item_id=payload['item_id'], outfit_id=payload['outfit_id'], coordinateX=payload['coordinateX'], coordinateY=payload['coordinateY'], image_width=payload['image_width'], image_height=payload['image_height'])
     print(new_outfit_collection)
 
+    outfit_collection_dict = model_to_dict(new_outfit_collection)
+
     # convert price Decimal type to string before serializing to JSON
     # to avoid TypeError: Object of type Decimal is not JSON serializable
-    for key, value in new_outfit_collection.items():
+    for key, value in outfit_collection_dict['item_id'].items():
         if key == 'price':
-            outfit_collection_dict[key] = str(value)
+            outfit_collection_dict['item_id'][key] = str(value)
 
     # remove user data
     outfit_collection_dict['item_id'].pop('user_id')
     outfit_collection_dict['outfit_id'].pop('user_id')
-
-    outfit_collection_dict = model_to_dict(new_outfit_collection)
 
     return jsonify(
         data=outfit_collection_dict,
