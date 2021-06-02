@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, after_this_request
 import models
 from resources.items import items
 from resources.categories import categories
@@ -41,6 +41,21 @@ app.register_blueprint(users, url_prefix='/api/v1/users')
 app.register_blueprint(outfit_collections, url_prefix='/api/v1/outfit-collections')
 
 
+@app.before_request
+def before_request():
+
+    """Connect to the db before each request"""
+    # print("you should see this before each request")
+    models.DATABASE.connect()
+
+    @after_this_request
+    def after_request(response):
+        """Close the db connetion after each request"""
+        # print("you should see this after each request")
+        models.DATABASE.close()
+        return response
+
+
 @app.route('/')
 def hello():
     return 'Hello, Wardrobe!'
@@ -76,5 +91,7 @@ def upload_file():
 
 
 if __name__ == '__main__':
-    models.initialize()
+    if os.environ.get('FLASK_ENV') != 'development':
+      print('\non heroku!')
+      models.initialize()
     app.run(debug=DEBUG, port=PORT)

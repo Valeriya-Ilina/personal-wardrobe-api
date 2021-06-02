@@ -1,9 +1,12 @@
 from peewee import *
 import datetime
+import os
 from flask_login import UserMixin
+from playhouse.db_url import connect
 
 # DATABASE = SqliteDatabase('wardrobe.sqlite')
-DATABASE = PostgresqlDatabase('wardrobe', user='postgres')
+# DATABASE = PostgresqlDatabase('wardrobe', user='postgres')
+DATABASE = connect(os.environ.get('DATABASE_URL') or 'postgresql:///wardrobe?host=localhost')
 
 
 class User_Account(UserMixin, Model):
