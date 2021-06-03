@@ -91,7 +91,7 @@ def upload_file():
 
 
 if __name__ == '__main__':
+    app.run(debug=DEBUG, port=PORT)
     if os.environ.get('FLASK_ENV') != 'development':
       print('\non heroku!')
       models.initialize()
-    app.run(debug=DEBUG, port=PORT)
