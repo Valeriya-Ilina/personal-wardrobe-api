@@ -28,11 +28,12 @@ login_manager.init_app(app)
 def load_user(user_id):
     return models.User_Account.get(models.User_Account.id == user_id)
 
-CORS(items, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(users, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(categories, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(outfits, origins=['http://localhost:3000'], supports_credentials=True)
-CORS(outfit_collections, origins=['http://localhost:3000'], supports_credentials=True)
+array_of_origins = ['http://localhost:3000', 'https://personal-wardrobe-fe.herokuapp.com']
+CORS(items, origins=array_of_origins, supports_credentials=True)
+CORS(users, origins=array_of_origins, supports_credentials=True)
+CORS(categories, origins=array_of_origins, supports_credentials=True)
+CORS(outfits, origins=array_of_origins, supports_credentials=True)
+CORS(outfit_collections, origins=array_of_origins, supports_credentials=True)
 
 app.register_blueprint(items, url_prefix='/api/v1/items')
 app.register_blueprint(categories, url_prefix='/api/v1/categories')
